@@ -1,83 +1,85 @@
+
 package org.firstinspires.ftc.teamcode.skystone;
 
-import com.qualcomm.robotcore.util.Hardware;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.Blinker;
-import com.qualcomm.robotcore.hardware.Gyroscope;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 
 @TeleOp(name = "Tele Op", group = "Linear Opmode")
 
-public class Driving extends LinearOpMode {
-    
+public class Driving extends EverythingConfig {
+        
     private double drive;
     private double strafe;
     private double turning;
     private float rollers;
-    private DcMotor frontleftDrive = null;
-    private DcMotor frontrightDrive = null;
-    private DcMotor backleftDrive = null;
-    private DcMotor backrightDrive = null;
-    private DcMotor toproller = null;
-    private DcMotor bottomroller = null;
+    private float intakes;
+    
+    
 
-
-    @Override
-    public void runOpMode() throws InterruptedException {
-        //Doing all the hardware mappings
-        frontleftDrive = hardwareMap.get(DcMotor.class, "frontleftdrive");
-        backrightDrive = hardwareMap.get(DcMotor.class, "backrightdrive");
-        backleftDrive = hardwareMap.get(DcMotor.class, "backleftdrive");
-        frontrightDrive = hardwareMap.get(DcMotor.class, "frontrightdrive");
-        toproller = hardwareMap.get(DcMotor.class, "toproller");
-        bottomroller = hardwareMap.get(DcMotor.class, "bottomroller");
-        // Telling Driver that Hardware is Configured
-        telemetry.addData("Status: ", "Hardware Configured");
-        telemetry.update();
         
-        drive = 0;
-        strafe = 0;
-        turning = 0;
-        rollers = 0;
+    public void runOpMode() {
         
+           
+    
+        initializeHardware();
         
-        backleftDrive.setDirection(DcMotor.Direction.REVERSE);
-        frontrightDrive.setDirection(DcMotor.Direction.FORWARD);
-        frontleftDrive.setDirection(DcMotor.Direction.FORWARD);
-        backrightDrive.setDirection(DcMotor.Direction.REVERSE);
-        
-        toproller.setDirection(DcMotor.Direction.FORWARD);
-        bottomroller.setDirection(DcMotor.Direction.REVERSE);
-        
-        telemetry.addData("Status: ", "Hardware Direction Configured");
-        telemetry.update();
         
         waitForStart();
 
         while (opModeIsActive()) {
-            drive = gamepad1.left_stick_y/2;
-            strafe = gamepad1.left_stick_x/2;
-            turning = -gamepad1.right_stick_x/2;
-            rollers = gamepad1.left_trigger;
+            
+            
+            drive = gamepad1.left_stick_y;
+            strafe = gamepad1.left_stick_x;
+            turning = gamepad1.right_stick_x;
+            rollers = gamepad2.left_trigger;
+            intakes = gamepad2.right_trigger;
+            
             
 
-            frontleftDrive.setPower((drive + strafe + turning));
-            frontrightDrive.setPower((drive - strafe - turning));
-            backleftDrive.setPower((drive - strafe + turning));
-            backrightDrive.setPower((drive + strafe - turning));
+            frontleftdrive.setPower(drive + strafe + turning);
+            frontrightdrive.setPower(drive - strafe - turning);
+            backleftdrive.setPower(drive - strafe + turning);
+            backrightdrive.setPower(drive + strafe - turning);
             
             toproller.setPower(rollers);
             bottomroller.setPower(rollers);
+            
+            intake.setPower(intakes);
         
             
+            if(gamepad2.a) {
+                setServo(0.5);
+            //servoright.setPosition(0.5);
+            }
             
-            telemetry.addData("Roller Power", rollers);
+            if(gamepad1.a) {
+                grab.setPosition(0.5);
+            }
+            if(gamepad1.b) {
+                grab.setPosition(1);
+            }
+            
+
+            
+            
+            if(gamepad2.b) {
+                setServo(0.49);
+            //servoright.setPosition(0.525);
+            }
+            
+            if(gamepad2.y) {
+                setServo(0.51);
+            //servoright.setPosition(0.45);
+            }
+           
+            telemetry.addData("ServoLeft Position", servoleft.getPosition());
+            telemetry.addData("ServoRight Position", servoright.getPosition());
             telemetry.update();
+
             
-            
+        
             
         }
     }
