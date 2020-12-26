@@ -33,7 +33,8 @@ public abstract class EverythingConfig extends LinearOpMode {
     protected DcMotor intake;
     protected Servo servoleft;
     protected Servo servoright;
-    protected Servo grab;
+    protected Servo topgrab;
+    protected Servo bottomgrab;
 
 
     
@@ -49,7 +50,8 @@ public abstract class EverythingConfig extends LinearOpMode {
         intake = hardwareMap.get(DcMotor.class, "intake");
         servoleft = hardwareMap.get(Servo.class, "servoleft");
         servoright = hardwareMap.get(Servo.class, "servoright");
-        grab = hardwareMap.get(Servo.class, "grab");
+        topgrab = hardwareMap.get(Servo.class, "topgrab");
+        bottomgrab = hardwareMap.get(Servo.class, "bottomgrab");
         // Telling Driver that Hardware is Configured
         telemetry.addData("Status: ", "Hardware Configured");
         telemetry.update();
@@ -371,7 +373,7 @@ public abstract class EverythingConfig extends LinearOpMode {
         telemetry.update();
     }
     protected void ServoGrab(double grabpos) {
-        grab.setPosition(grabpos);
+        topgrab.setPosition(grabpos);
     }
     
     
