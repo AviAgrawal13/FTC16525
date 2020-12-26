@@ -28,8 +28,8 @@ public class Driving extends EverythingConfig {
         waitForStart();
 
         while (opModeIsActive()) {
-            
-            
+    
+    
             drive = gamepad1.left_stick_y;
             strafe = gamepad1.left_stick_x;
             turning = gamepad1.right_stick_x;
@@ -42,45 +42,48 @@ public class Driving extends EverythingConfig {
             frontrightdrive.setPower(drive - strafe - turning);
             backleftdrive.setPower(drive - strafe + turning);
             backrightdrive.setPower(drive + strafe - turning);
-            
+
+
             toproller.setPower(rollers);
             bottomroller.setPower(rollers);
             
             intake.setPower(intakes);
-        
-            
-            if(gamepad2.a) {
-                setServo(0.5);
-            //servoright.setPosition(0.5);
-            }
-            
+    
+
+
             if(gamepad1.a) {
-                grab.setPosition(0.5);
+                topgrab.setPosition(0.5);
             }
             if(gamepad1.b) {
-                grab.setPosition(1);
+                topgrab.setPosition(1);
             }
-            
+            if(gamepad1.x) {
+                bottomgrab.setPosition(0.3);
+            }
+            if(gamepad1.y) {
+                bottomgrab.setPosition(0.55);
+            }
+    
+    
 
-            
-            
+            if(gamepad2.a) {
+                setServo(0.5);
+            }
             if(gamepad2.b) {
                 setServo(0.49);
-            //servoright.setPosition(0.525);
             }
-            
             if(gamepad2.y) {
                 setServo(0.51);
-            //servoright.setPosition(0.45);
             }
-           
+
+   
             telemetry.addData("ServoLeft Position", servoleft.getPosition());
             telemetry.addData("ServoRight Position", servoright.getPosition());
             telemetry.update();
 
-            
-        
-            
+
+    
+    
         }
     }
 
