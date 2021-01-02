@@ -39,44 +39,19 @@ public class RingDetectionExample extends LinearOpMode {
     private static final String LABEL_FIRST_ELEMENT = "Quad";
     private static final String LABEL_SECOND_ELEMENT = "Single";
     private int RingAmount;
-
-    /*
-     * IMPORTANT: You need to obtain your own license key to use Vuforia. The string below with which
-     * 'parameters.vuforiaLicenseKey' is initialized is for illustration only, and will not function.
-     * A Vuforia 'Development' license key, can be obtained free of charge from the Vuforia developer
-     * web site at https://developer.vuforia.com/license-manager.
-     *
-     * Vuforia license keys are always 380 characters long, and look as if they contain mostly
-     * random data. As an example, here is a example of a fragment of a valid key:
-     *      ... yIgIzTqZ4mWjk9wd3cZO9T1axEqzuhxoGlfOOI2dRzKS4T0hQ8kT ...
-     * Once you've obtained a license key, copy the string from the Vuforia web site
-     * and paste it in to your code on the next line, between the double quotes.
-     */
+    
     private static final String VUFORIA_KEY = "ATTRFhT/////AAABmeuU4pPqwkWQpdWB0mGpIXBvTd9EJJ+EjtrJ1fg3Ru0ChVOZB/vhpDZdxae9/JeuxcEWdk6iPegz2CnouzBHApfMjWj87mnni8gB12rn1gqguZoDacVwTIbkScWQKuJnWNHTkw0bzjlU6BpbO0gZgisjl8e+2XAeRkzrB/vPayFy/guzHaJErELJypA0Ebgpt9CgxPbTrm0WLnuufz2+Ocyt5Rjz6B8tVfmBMnKo8a+paDYQcbSWsIQmar9NcrHTXVHoOY6sOorn3mcfFqYKIx09xbS45SSXcCHhxLla73psp5Twx1tL5MSVEX7/54KWlgz8wRAOHg/kxm9WyK6Q15pIxA2aYICpYCdK2NOWpQZi";
 
-    /**
-     * {@link #vuforia} is the variable we will use to store our instance of the Vuforia
-     * localization engine.
-     */
     private VuforiaLocalizer vuforia;
 
-    /**
-     * {@link #tfod} is the variable we will use to store our instance of the TensorFlow Object
-     * Detection engine.
-     */
     private TFObjectDetector tfod;
 
     @Override
     public void runOpMode() {
-        // The TFObjectDetector uses the camera frames from the VuforiaLocalizer, so we create that
-        // first.
         initVuforia();
         initTfod();
 
-        /**
-         * Activate TensorFlow Object Detection before we wait for the start command.
-         * Do it here so that the Camera Stream window will have the TensorFlow annotations visible.
-         **/
+        
         if (tfod != null) {
             tfod.activate();
 
@@ -101,7 +76,11 @@ public class RingDetectionExample extends LinearOpMode {
                     // the last time that call was made.
                     List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
                     if (updatedRecognitions != null) {
+                        telemetry.addData("Rings", RingAmount);
                         telemetry.addData("# Object Detected", updatedRecognitions.size());
+                        if(updatedRecognitions.size() == 0) {
+                            RingAmount = 0;
+                        }
                         // step through the list of recognitions and display boundary info.
                         int i = 0;
                         for (Recognition recognition : updatedRecognitions) {
@@ -111,17 +90,15 @@ public class RingDetectionExample extends LinearOpMode {
                             telemetry.addData(String.format("  right,bottom (%d)", i), "%.03f , %.03f",
                                     recognition.getRight(), recognition.getBottom());
                             
-                            if (230 < recognition.getTop() && recognition.getTop() < 240) {
+                            if (200 < recognition.getTop() && recognition.getTop() < 230) {
                                 RingAmount = 4;
-                            }
-        
-                            if (178 < recognition.getTop() && recognition.getTop() < 183 ) {
+                            } 
+                            else if (275 < recognition.getTop() && recognition.getTop() < 286 ) {
                                 RingAmount = 1;
+                            } 
+                            else {
+                                RingAmount = 0;
                             }
-                            
-                            
-                            
-                            telemetry.addData("Rings", RingAmount);
                         }
                         telemetry.update();
                     }
